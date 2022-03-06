@@ -107,4 +107,14 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.7" />
 
+    <ImageView
+        android:id="@+id/imageViewFavorites"
+        android:layout_width="38dp"
+        android:layout_height="88dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivPlayPauseDetail"
+        app:srcCompat="@drawable/ic_favorite" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
