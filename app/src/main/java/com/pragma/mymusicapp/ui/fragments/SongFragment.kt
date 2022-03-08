@@ -40,6 +40,10 @@ class SongFragment : Fragment(R.layout.fragment_song) {
     private val songViewModel: SongViewModel by viewModels()
 
     private var curPlayingSong: Song? = null
+    set(value) {
+        field = value
+        favoritesViewModel.checkIsFavourite(value)
+    }
 
     private var playbackState: PlaybackStateCompat? = null
 
@@ -47,12 +51,14 @@ class SongFragment : Fragment(R.layout.fragment_song) {
 
     private var favoriteSong:FavoriteSong ?= null
 
-    private var favoritesViewModel: FavoritesViewModel ? = null
+    private val favoritesViewModel: FavoritesViewModel by viewModels()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        val dataBaseInstance = FavoriteSongsDatabase.getDatabasenIstance(requireContext())
+        favoritesViewModel.setInstanceOfDb(dataBaseInstance)
         subscribeToObservers()
 
         ivPlayPauseDetail.setOnClickListener {
@@ -101,8 +107,9 @@ class SongFragment : Fragment(R.layout.fragment_song) {
         //observerViewModel()
 
         imageViewFavorites.setOnClickListener {
-            observerViewModel()
+            favoritesViewModel.onFavouriteClick(curPlayingSong)
         }
+        observerViewModel()
     }
 
     private fun observerViewModel() {
@@ -117,6 +124,13 @@ class SongFragment : Fragment(R.layout.fragment_song) {
                     .show()
             }
         })
+
+        favoritesViewModel.isFavourite.observe(viewLifecycleOwner){
+            if(it==true)
+            imageViewFavorites.setImageResource(R.drawable.ic_favorite_selected)
+            else
+                imageViewFavorites.setImageResource(R.drawable.ic_favorite)
+        }
     }
 
     private fun updateTitleAndSongImage(song: Song) {

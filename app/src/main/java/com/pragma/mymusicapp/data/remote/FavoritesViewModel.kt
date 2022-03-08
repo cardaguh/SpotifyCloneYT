@@ -2,11 +2,16 @@ package com.pragma.mymusicapp.data.remote
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.pragma.mymusicapp.data.entities.FavoriteSong
+import com.pragma.mymusicapp.data.entities.Song
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 open class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
@@ -22,8 +27,12 @@ open class FavoritesViewModel(application: Application) : AndroidViewModel(appli
 //        favoritesRepository.insert(searchDataModel)
 //    }
 
+    private val _isFavourite = MutableLiveData<Boolean>()
+    val isFavourite: LiveData<Boolean> = _isFavourite
+
     fun insert(data: FavoriteSong){
 
+/*
         dataBaseInstance?.favoritesDao()?.insert(data)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
@@ -34,11 +43,13 @@ open class FavoritesViewModel(application: Application) : AndroidViewModel(appli
             })?.let {
                 compositeDisposable.add(it)
             }
+*/
     }
 
 
     fun checkRecordExist(data: FavoriteSong){
 
+/*
         dataBaseInstance?.favoritesDao()?.isRecordExists(data.id)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
@@ -53,10 +64,16 @@ open class FavoritesViewModel(application: Application) : AndroidViewModel(appli
             })?.let {
                 compositeDisposable.add(it)
             }
+*/
+    }
+
+    fun checkIsFavourite(song: Song?){
+        viewModelScope.launch {
+            _isFavourite.value = dataBaseInstance?.favoritesDao()?.isRecordExists(song?.mediaId)!=null
+        }
     }
 
     fun delete(data: FavoriteSong){
-
         dataBaseInstance?.favoritesDao()?.deleteSingleRecord(data)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
@@ -70,23 +87,23 @@ open class FavoritesViewModel(application: Application) : AndroidViewModel(appli
     }
 
 
+    fun onFavouriteClick(song: Song?){
+        if(song==null)
+            return
+        viewModelScope.launch {
+            val found = dataBaseInstance?.favoritesDao()?.isRecordExists(song.mediaId)
+            if(found==null)
+                dataBaseInstance?.favoritesDao()?.insert(FavoriteSong(song.mediaId,song.title, song.imageUrl))
+            else
+                dataBaseInstance?.favoritesDao()?.deleteSingleRecord(song.mediaId)
+            _isFavourite.value = found==null
+        }
+    }
 
-    fun getFavoritesList(){
-        dataBaseInstance?.favoritesDao()?.getAllRecords()
-            ?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe ({
-                if(!it.isNullOrEmpty()){
-                    favoritesList.postValue(it)
-                }else{
-                    favoritesList.postValue(mutableListOf())
-                }
-            },{
-                favoritesList.postValue(mutableListOf())
-            })?.let {
-
-                compositeDisposable.add(it)
-            }
+    fun getFavoritesList() = viewModelScope.launch {
+        dataBaseInstance?.favoritesDao()?.getAllRecords().let { list->
+            favoritesList.value = list
+        }
     }
 
 

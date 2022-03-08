@@ -13,7 +13,6 @@ import com.pragma.mymusicapp.adapters.FavoriteSongAdapter
 import com.pragma.mymusicapp.data.entities.FavoriteSong
 import com.pragma.mymusicapp.data.remote.FavoriteSongsDatabase
 import com.pragma.mymusicapp.data.remote.FavoritesViewModel
-import com.pragma.mymusicapp.ui.MainActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_list.*
 

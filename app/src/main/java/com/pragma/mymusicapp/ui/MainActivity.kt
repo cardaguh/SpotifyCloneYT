@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.viewpager2.widget.ViewPager2
@@ -49,10 +50,9 @@ class MainActivity : AppCompatActivity() {
     private var playbackState: PlaybackStateCompat? = null
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-
+    private var navController: NavController? = null
     companion object {
         const val TAG = "CONSOLE"
-        private var navController: NavController? = null
     }
 
     private val CLIENT_ID = "223eab0435f148bfbb88206ec3994844"
@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         subscribeToObservers()
 
         vpSong.adapter = swipeSongAdapter
+        navController = (navHostFragment as NavHostFragment).navController
 
         vpSong.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -186,7 +187,7 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_favorite -> {
                 //Toast.makeText(applicationContext, "click canciones favoritas", Toast.LENGTH_LONG).show()
-                MainActivity.navController?.navigate(R.id.favoritesFragment)
+                navController?.navigate(R.id.favoritesFragment)
                 true
             }
             R.id.action_loguot ->{

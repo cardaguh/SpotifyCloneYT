@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "favorite_song")
 data class FavoriteSong constructor(
-    @field:SerializedName("id") @PrimaryKey @ColumnInfo(name = "id") var id: Int,
+    @field:SerializedName("id") @PrimaryKey @ColumnInfo(name = "id") var id: String,
     @field:SerializedName("name") @ColumnInfo(name = "name") var name: String?,
     @field:SerializedName("photo") @ColumnInfo(name = "photo") var photo: String?
 ) : Parcelable

@@ -20,10 +20,6 @@ class FavoriteSongAdapter(private var touristicsites: MutableList<FavoriteSong>,
                           private val onFavoritesClick: (Int,FavoriteSong) -> Unit = { _,_ -> },
                           private val onItemClick: (Int,FavoriteSong) -> Unit = { _,_ -> }) : RecyclerView.Adapter<FavoriteSongAdapter.MViewHolder>() {
 
-    val context: Context
-        get() {
-            TODO()
-        }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -58,7 +54,7 @@ class FavoriteSongAdapter(private var touristicsites: MutableList<FavoriteSong>,
             Glide.with(imageView.context).load(touristicsite.photo).into(imageView)
             imageViewFavorites.setOnClickListener {
                 onFavoritesClick(adapterPosition,touristicsite)
-                Toast.makeText(context, "click favorite adapter", Toast.LENGTH_SHORT).show()
+                Toast.makeText(imageViewFavorites.context, "click favorite adapter", Toast.LENGTH_SHORT).show()
                 Log.d("Carlos Daniel", "Click en button favorite imageView")
             }
 

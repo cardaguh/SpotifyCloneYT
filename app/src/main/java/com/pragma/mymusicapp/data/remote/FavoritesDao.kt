@@ -11,23 +11,23 @@ import io.reactivex.Single
 @Dao
 interface FavoritesDao {
     @Query("SELECT * from favorite_song")
-    fun getAllRecords():Single<MutableList<FavoriteSong>>
+    suspend fun getAllRecords():MutableList<FavoriteSong>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(insert: FavoriteSong?): Completable
+    suspend fun insert(insert: FavoriteSong?)
 
     @Query("DELETE FROM favorite_song")
     fun deleteAll()
 
     @Query("SELECT * from favorite_song where id=:id")
-    fun isRecordExists(id: Int?): Single<FavoriteSong>
+    suspend fun isRecordExists(id: String?): FavoriteSong?
 
 
     @Delete
     fun deleteSingleRecord(searchContactDataModel: FavoriteSong?): Completable
 
     @Query("DELETE FROM favorite_song where id=:id")
-    fun deleteSingleRecord(id: String?) : Completable
+    suspend fun deleteSingleRecord(id: String?)
 
 }
